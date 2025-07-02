@@ -7,7 +7,7 @@ on:
     branches: [develop, master]
 
 jobs:
-  build-test:
+  build-and-push-docker:
     runs-on: ubuntu-latest
 
     services:
@@ -52,27 +52,8 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2-
 
-      - name: Wait for Postgres and Axon Server to be ready
-        run: |
-          for i in {1..30}; do
-            pg_isready -h localhost -p 5434 -U test && curl -f http://localhost:8024 && break
-            echo "Waiting for services..."
-            sleep 5
-          done
-
       - name: Build all modules (skip tests)
         run: mvn clean install -DskipTests
-
-#      - name: Run unit tests (domain + application)
-#        run: mvn test -pl domain,application
-#
-#      - name: Run integration tests (infrastructure)
-#        env:
-#          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5434/test_db
-#          SPRING_DATASOURCE_USERNAME: test
-#          SPRING_DATASOURCE_PASSWORD: test
-#          AXON_AXONSERVER_SERVERS: localhost:8124
-#        run: mvn verify -pl infrastructure
 
       - name: Build Docker image
         if: github.ref == 'refs/heads/master'
