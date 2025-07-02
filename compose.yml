@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: insurance_policies_postgres
+    ports:
+      - "5434:5432"
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_USER: insurance-policies
+      POSTGRES_PASSWORD: insurance-policies
+      POSTGRES_DB: insurance-policies
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - insurance_policies_postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "insurance-policies"]
+      interval: 2s
+      timeout: 2s
+      retries: 20
+    restart: unless-stopped
+
+  axonserver:
+    image: axoniq/axonserver:latest
+    container_name: axon-server
+    ports:
+      - "8024:8024"  # Axon Server dashboard
+      - "8124:8124"  # Axon Server client connections
+    environment:
+      - AXONIQ_AXONSERVER_STANDALONE=true
+    restart: unless-stopped
+
+  app:
+    build:
+      context: ./presentation  # Adjust if your Dockerfile is elsewhere
+      dockerfile: Dockerfile
+    container_name: insurance_policies_app
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/insurance-policies
+      SPRING_DATASOURCE_USERNAME: insurance-policies
+      SPRING_DATASOURCE_PASSWORD: insurance-policies
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+      AXON_SERVER_SERVERS: axonserver:8124
+    depends_on:
+      - postgres
+      - axonserver
+    restart: unless-stopped
+
+volumes:
+  insurance_policies_postgres_data:
