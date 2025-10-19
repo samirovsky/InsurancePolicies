@@ -7,8 +7,6 @@ import com.tinubu.insurance.application.exception.InvalidInputException;
 import com.tinubu.insurance.domain.policy.entity.PolicyId;
 import com.tinubu.insurance.domain.policy.entity.PolicyStatus;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
@@ -68,8 +66,6 @@ public class PolicyCommandService {
    */
   public CompletableFuture<Void> updatePolicy(
       PolicyId policyId, String name, PolicyStatus status, LocalDate startDate, LocalDate endDate) {
-    // Build the command object (PolicyUpdatedEvent in this case)
-    OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
     UpdatePolicyCommand command =
         new UpdatePolicyCommand(policyId, name, status, startDate, endDate);
     logger.info("Sending command to update policy with ID: {}", policyId);

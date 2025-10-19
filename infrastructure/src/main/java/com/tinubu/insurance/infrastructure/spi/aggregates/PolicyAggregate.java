@@ -12,6 +12,7 @@ import com.tinubu.insurance.domain.policy.events.PolicyCreatedEvent;
 import com.tinubu.insurance.domain.policy.events.PolicyStatusUpdatedEvent;
 import com.tinubu.insurance.domain.policy.events.PolicyUpdatedEvent;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import lombok.Getter;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
@@ -33,7 +34,7 @@ public class PolicyAggregate {
   @CommandHandler
   public PolicyAggregate(CreatePolicyCommand command) {
 
-    OffsetDateTime now = OffsetDateTime.now();
+    OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
 
     // Apply the creation event
     apply(
@@ -64,7 +65,7 @@ public class PolicyAggregate {
             command.status(),
             command.startDate(),
             command.endDate(),
-            OffsetDateTime.now()));
+            OffsetDateTime.now(ZoneOffset.UTC)));
   }
 
   @CommandHandler
@@ -84,7 +85,7 @@ public class PolicyAggregate {
               currentStatus,
               newStatus,
               command.reason(),
-              OffsetDateTime.now()));
+              OffsetDateTime.now(ZoneOffset.UTC)));
     }
   }
 
