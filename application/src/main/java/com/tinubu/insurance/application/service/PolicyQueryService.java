@@ -6,9 +6,7 @@ import com.tinubu.insurance.application.queries.FindPolicyByIdQuery;
 import com.tinubu.insurance.domain.policy.entity.Policy;
 import com.tinubu.insurance.domain.policy.entity.PolicyId;
 import com.tinubu.insurance.domain.policy.port.PolicyRepository;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.queryhandling.QueryHandler;
@@ -22,7 +20,6 @@ public class PolicyQueryService {
 
   private static final Logger logger = LoggerFactory.getLogger(PolicyQueryService.class);
 
-  private final Map<PolicyId, Policy> policyMap = new HashMap<>();
   private final PolicyRepository<Policy, UUID> policyRepository;
 
   @QueryHandler

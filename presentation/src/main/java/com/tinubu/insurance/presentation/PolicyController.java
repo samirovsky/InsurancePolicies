@@ -4,7 +4,6 @@ import com.tinubu.insurance.application.queries.FindAllPoliciesQuery;
 import com.tinubu.insurance.application.queries.FindPolicyByIdQuery;
 import com.tinubu.insurance.application.service.PolicyCommandService;
 import com.tinubu.insurance.application.service.PolicyQueryService;
-import com.tinubu.insurance.application.service.PolicyStatusSchedulerService;
 import com.tinubu.insurance.domain.policy.entity.Policy;
 import com.tinubu.insurance.domain.policy.entity.PolicyId;
 import com.tinubu.insurance.presentation.dto.CreatePolicyRequest;
@@ -33,8 +32,6 @@ public class PolicyController {
 
   private final PolicyCommandService commandService;
   private final PolicyQueryService queryService;
-  private final PolicyStatusSchedulerService schedulerService;
-
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public void createPolicy(@Valid @RequestBody CreatePolicyRequest request) {

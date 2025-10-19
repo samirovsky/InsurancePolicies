@@ -131,7 +131,7 @@ public class PolicyProjection {
       return repository.findPoliciesNeedingStatusUpdate().stream().toList();
 
     } catch (Exception e) {
-      logger.error("Failed to handle FindAllPoliciesQuery", e);
+      logger.error("Failed to handle FindPoliciesNeedingStatusUpdateQuery", e);
       throw e;
     }
   }
